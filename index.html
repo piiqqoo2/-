@@ -6,102 +6,154 @@
 <title>성어 암기 카드 30</title>
 <style>
   *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#f5f7fb;color:#172033}
-  .app{max-width:900px;margin:auto;padding:20px}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#f4f6fa;color:#1e293b}
+  .app{max-width:880px;margin:auto;padding:20px}
   header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
-  h1{margin:0;font-size:24px}
-  .sub{color:#687386;font-size:13px;margin-top:5px}
-  button{border:0;border-radius:12px;padding:10px 14px;background:#172033;color:white;font-size:14px;cursor:pointer}
-  button.secondary{background:white;color:#172033;border:1px solid #dce1ea}
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-  .stat{background:white;border:1px solid #e5e9f0;border-radius:14px;padding:12px;text-align:center}
-  .stat b{display:block;font-size:20px}.stat span{font-size:12px;color:#7b8493}
-  .progress{height:8px;background:#e6eaf1;border-radius:99px;overflow:hidden;margin:10px 0 20px}
-  .bar{height:100%;width:0%;background:#172033;transition:.25s}
-  .card-wrap{perspective:1200px;height:410px;cursor:pointer}
-  .card{height:100%;position:relative;transform-style:preserve-3d;transition:.5s}
+  h1{margin:0;font-size:24px;font-weight:800;color:#0f172a}
+  .sub{color:#64748b;font-size:13px;margin-top:4px}
+  
+  button{border:0;border-radius:12px;padding:10px 16px;background:#0f172a;color:white;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s ease}
+  button:hover{opacity:0.92;transform:translateY(-1px)}
+  button:active{transform:translateY(0)}
+  button.secondary{background:white;color:#334155;border:1px solid #cbd5e1;box-shadow:0 1px 2px rgba(0,0,0,0.05)}
+  button.secondary:hover{background:#f8fafc;border-color:#94a3b8}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+  .stat{background:white;border:1px solid #e2e8f0;border-radius:16px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+  .stat b{display:block;font-size:22px;color:#0f172a}.stat span{font-size:12px;color:#64748b;font-weight:500}
+  
+  .progress{height:10px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin:10px 0 20px;box-shadow:inset 0 1px 2px rgba(0,0,0,0.05)}
+  .bar{height:100%;width:0%;background:linear-gradient(90deg, #3b82f6, #10b981);transition:width 0.3s ease}
+
+  .tools{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin:10px 0 18px}
+  .tools-group{display:flex;gap:8px;align-items:center}
+  select{padding:10px 14px;border:1px solid #cbd5e1;border-radius:12px;background:white;font-size:14px;font-weight:600;color:#334155;outline:none;cursor:pointer}
+  
+  .card-wrap{perspective:1200px;height:420px;cursor:pointer}
+  .card{height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)}
   .card.flipped{transform:rotateY(180deg)}
-  .face{position:absolute;inset:0;backface-visibility:hidden;background:white;border:1px solid #e2e7ef;border-radius:24px;box-shadow:0 10px 35px rgba(28,42,66,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center}
-  .back{transform:rotateY(180deg)}
-  .hanja{font-family:"Noto Serif CJK KR","Noto Serif KR","Source Han Serif K","Apple SD Gothic Neo",serif;font-size:62px;letter-spacing:5px}
-  .reading{font-size:23px;font-weight:700;margin-top:12px}
-  .meaning{font-size:20px;line-height:1.55;font-weight:600}
-  .example{font-size:16px;line-height:1.65;color:#586274;margin-top:14px;max-width:650px}
-  .hint{font-size:12px;color:#8b94a3;margin-top:20px}
-  .controls{display:flex;justify-content:center;gap:10px;margin:16px 0}
-  .controls button{min-width:92px}
-  .know{background:#23864a}.again{background:#c44747}
-  .tools{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
-  select{padding:10px;border:1px solid #dce1ea;border-radius:12px;background:white}
-  .quiz{display:none;background:white;border:1px solid #e2e7ef;border-radius:20px;padding:24px}
-  .quiz h2{margin-top:0}
-  .q{font-size:34px;font-weight:700;text-align:center;margin:20px 0}
-  .answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .answers button{background:white;color:#172033;border:1px solid #dce1ea;text-align:left}
-  .answers button.correct{border-color:#23864a;background:#eefaf2}
-  .answers button.wrong{border-color:#c44747;background:#fff1f1}
-  .list{display:none;background:white;border:1px solid #e2e7ef;border-radius:20px;padding:18px}
-  .item{display:flex;justify-content:space-between;gap:12px;padding:12px 4px;border-bottom:1px solid #edf0f4}
+  .face{position:absolute;inset:0;backface-visibility:hidden;background:white;border:1px solid #e2e8f0;border-radius:24px;box-shadow:0 12px 32px rgba(15,23,42,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+  .back{transform:rotateY(180deg);background:#fafafa}
+  
+  .hanja{font-family:"Noto Serif CJK KR","Noto Serif KR","Source Han Serif K",serif;font-size:60px;letter-spacing:6px;color:#0f172a;font-weight:700}
+  .reading{font-size:24px;font-weight:700;margin-top:14px;color:#2563eb}
+  .meaning{font-size:20px;line-height:1.55;font-weight:600;color:#1e293b;margin-top:8px}
+  .example{font-size:15px;line-height:1.6;color:#64748b;margin-top:16px;max-width:620px;background:#f1f5f9;padding:12px 18px;border-radius:12px}
+  .hint{font-size:13px;color:#94a3b8;margin-top:22px;font-weight:500}
+  
+  .controls{display:flex;justify-content:center;gap:12px;margin:20px 0}
+  .controls button{min-width:100px;padding:12px 18px;font-size:15px}
+  .know{background:#10b981;color:white}.know:hover{background:#059669}
+  .again{background:#f43f5e;color:white}.again:hover{background:#e11d48}
+  .reset-btn{background:#6366f1;color:white}.reset-btn:hover{background:#4f46e5}
+
+  .completion-box{display:none;background:white;border:1px solid #e2e8f0;border-radius:24px;padding:50px 20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,0.05)}
+  .completion-box h2{font-size:28px;color:#0f172a;margin:0 0 10px 0}
+  .completion-box p{color:#64748b;font-size:16px;margin-bottom:24px}
+
+  .quiz{display:none;background:white;border:1px solid #e2e8f0;border-radius:24px;padding:28px;box-shadow:0 10px 30px rgba(0,0,0,0.05)}
+  .quiz h2{margin-top:0;font-size:20px;color:#0f172a}
+  .q{font-size:32px;font-weight:700;text-align:center;margin:24px 0;color:#0f172a}
+  .answers{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .answers button{background:white;color:#334155;border:1px solid #cbd5e1;text-align:left;padding:16px;font-size:15px;line-height:1.4}
+  .answers button:hover:not(:disabled){background:#f8fafc;border-color:#94a3b8}
+  .answers button.correct{border-color:#10b981;background:#ecfdf5;color:#065f46;font-weight:700}
+  .answers button.wrong{border-color:#f43f5e;background:#fff1f2;color:#9f1239}
+
+  .list{display:none;background:white;border:1px solid #e2e8f0;border-radius:24px;padding:24px;margin-top:16px;box-shadow:0 10px 30px rgba(0,0,0,0.05)}
+  .list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #e2e8f0}
+  .list-header h2{margin:0;font-size:20px}
+  .item{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 8px;border-bottom:1px solid #f1f5f9}
   .item:last-child{border-bottom:0}
-  .item .left{font-size:23px;font-weight:700}.item .right{text-align:right;color:#5e6878}
-  @media(max-width:600px){
-    .app{padding:14px}.hanja{font-size:48px}.card-wrap{height:390px}
-    .answers{grid-template-columns:1fr}.item{align-items:center}.item .right{font-size:13px}
+  .item .left{font-size:20px;font-weight:700;color:#0f172a}
+  .item .left small{display:block;font-size:14px;color:#2563eb;font-weight:600;margin-top:2px}
+  .item .right{text-align:right;color:#475569;font-size:14px;max-width:55%}
+  .badge{display:inline-block;padding:4px 8px;border-radius:6px;font-size:12px;font-weight:700;margin-left:8px}
+  .badge.done{background:#dcfce7;color:#166534}
+  .badge.todo{background:#f1f5f9;color:#64748b}
+
+  @media(max-width:640px){
+    .app{padding:14px}
+    .hanja{font-size:46px}
+    .card-wrap{height:390px}
+    .answers{grid-template-columns:1fr}
+    .item{flex-direction:column;align-items:flex-start;gap:6px}
+    .item .right{text-align:left;max-width:100%}
   }
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-  <div><h1>📚 성어 암기 카드</h1><div class="sub">수행평가 대비 · 총 30개</div></div>
+  <div>
+    <h1>📚 성어 암기 카드</h1>
+    <div class="sub">수행평가 대비 · 총 30개 성어</div>
+  </div>
   <button class="secondary" onclick="toggleList()">전체 보기</button>
 </header>
 
 <div class="stats">
-  <div class="stat"><b id="pos">1 / 30</b><span>현재 카드</span></div>
-  <div class="stat"><b id="known">0</b><span>외웠어요</span></div>
-  <div class="stat"><b id="remain">30</b><span>남은 카드</span></div>
+  <div class="stat"><b id="pos">1 / 30</b><span>현재 위치</span></div>
+  <div class="stat"><b id="known" style="color:#10b981">0</b><span>암기 완료</span></div>
+  <div class="stat"><b id="remain" style="color:#2563eb">30</b><span>남은 성어</span></div>
 </div>
 <div class="progress"><div class="bar" id="bar"></div></div>
 
 <div class="tools">
   <select id="mode" onchange="changeMode()">
-    <option value="flash">암기 카드</option>
-    <option value="quiz">4지선다 퀴즈</option>
+    <option value="flash">🎴 플래시 카드</option>
+    <option value="quiz">✏️ 4지선다 퀴즈</option>
   </select>
-  <button class="secondary" onclick="shuffleCards()">🔀 셔플</button>
-  <button class="secondary" onclick="resetKnown()">학습 기록 초기화</button>
+  <div class="tools-group">
+    <button class="secondary" onclick="shuffleCards()">🔀 셔플</button>
+    <button class="reset-btn" onclick="resetKnown()">🔄 학습 기록 초기화</button>
+  </div>
 </div>
 
 <section id="flash">
-  <div class="card-wrap" onclick="flip()">
+  <div class="card-wrap" id="cardWrap" onclick="flip()">
     <div class="card" id="card">
       <div class="face front">
         <div class="hanja" id="hanja">螢雪之功</div>
-        <div class="reading" id="reading" style="display:none"></div>
-        <div class="hint">카드를 눌러 뜻 보기</div>
+        <div class="hint">💡 카드를 클릭하면 뜻을 확인할 수 있습니다</div>
       </div>
       <div class="face back">
         <div class="reading" id="backReading">형설지공</div>
         <div class="meaning" id="meaning">어려운 환경 속에서도 꾸준히 노력하여 얻은 성공과 보람</div>
         <div class="example" id="example">예시: 어려운 환경에서도 포기하지 않고 공부를 계속했다.</div>
-        <div class="hint">다시 누르면 한자로 돌아갑니다</div>
+        <div class="hint">🔄 카드를 다시 클릭하면 한자로 돌아갑니다</div>
       </div>
     </div>
   </div>
-  <div class="controls">
+
+  <div class="completion-box" id="completionBox">
+    <h2>🎉 모든 성어를 완벽하게 암기했습니다!</h2>
+    <p>축하합니다! 30개의 모든 성어를 암기 완료했습니다.</p>
+    <button class="reset-btn" onclick="resetKnown()">🔄 처음부터 다시 학습하기</button>
+  </div>
+
+  <div class="controls" id="controls">
     <button class="secondary" onclick="prev(event)">← 이전</button>
-    <button class="again" onclick="mark(false,event)">↻ 다시</button>
-    <button class="know" onclick="mark(true,event)">✓ 암기</button>
+    <button class="again" onclick="mark(false,event)">↻ 나중에</button>
+    <button class="know" onclick="mark(true,event)">✓ 암기완료</button>
     <button class="secondary" onclick="next(event)">다음 →</button>
   </div>
 </section>
 
 <section class="quiz" id="quiz">
-  <h2>뜻 맞히기</h2>
-  <div class="q" id="quizQ"></div>
-  <div class="answers" id="answers"></div>
-  <div style="text-align:center;margin-top:18px"><button class="secondary" onclick="nextQuiz()">다음 문제</button></div>
+  <h2>뜻 맞히기 퀴즈</h2>
+  <div id="quizContent">
+    <div class="q" id="quizQ"></div>
+    <div class="answers" id="answers"></div>
+    <div style="text-align:center;margin-top:20px">
+      <button class="secondary" onclick="nextQuiz()">다음 문제 →</button>
+    </div>
+  </div>
+  <div class="completion-box" id="quizCompletionBox" style="display:none">
+    <h2>🎉 남은 퀴즈용 성어가 없습니다!</h2>
+    <p>모든 성어를 이미 암기하셨습니다. 다시 풀어보고 싶다면 기록을 초기화해주세요.</p>
+    <button class="reset-btn" onclick="resetKnown()">🔄 학습 기록 초기화</button>
+  </div>
 </section>
 
 <section class="list" id="list"></section>
@@ -141,89 +193,227 @@ const data = [
 ["愚公移山","우공이산","어떤 일이든 끊임없이 노력하면 반드시 이루어짐","매일 조금씩 공부하면 결국 목표를 이룰 수 있다는 것이 우공이산의 교훈이다."]
 ];
 
-let cards=[...data], idx=0, knownSet=new Set(), quizIndex=0;
-function save(){localStorage.setItem("seongeo-known",JSON.stringify([...knownSet]))}
-try{knownSet=new Set(JSON.parse(localStorage.getItem("seongeo-known")||"[]"))}catch(e){}
+let cards = [...data];
+let currentIndex = 0;
+let knownSet = new Set();
 
-function render(){
-  const x=cards[idx];
-  document.getElementById("hanja").textContent=x[0];
-  document.getElementById("reading").textContent=x[1];
-  document.getElementById("reading").style.display="none";
-  document.getElementById("backReading").textContent=x[1];
-  document.getElementById("meaning").textContent=x[2];
-  document.getElementById("example").textContent="예시: "+x[3];
-  document.getElementById("pos").textContent=(idx+1)+" / "+cards.length;
-  document.getElementById("known").textContent=knownSet.size;
-  document.getElementById("remain").textContent=cards.length-knownSet.size;
-  document.getElementById("bar").style.width=(knownSet.size/cards.length*100)+"%";
-  document.getElementById("card").classList.remove("flipped");
+// 저장된 암기 내역 불러오기
+try {
+  const saved = JSON.parse(localStorage.getItem("seongeo-known") || "[]");
+  knownSet = new Set(saved);
+} catch(e) {
+  knownSet = new Set();
 }
-function flip(){document.getElementById("card").classList.toggle("flipped")}
-function next(e){
-  if(e)e.stopPropagation();
-  const start=idx;
-  do { idx=(idx+1)%cards.length; }
-  while(knownSet.has(cards[idx][0]) && idx!==start);
-  render();
+
+function save() {
+  localStorage.setItem("seongeo-known", JSON.stringify([...knownSet]));
 }
-function prev(e){
-  if(e)e.stopPropagation();
-  const start=idx;
-  do { idx=(idx-1+cards.length)%cards.length; }
-  while(knownSet.has(cards[idx][0]) && idx!==start);
-  render();
+
+// 암기하지 않은 단어들만 추출하는 헬퍼 함수
+function getRemainingCards() {
+  return cards.filter(c => !knownSet.has(c[0]));
 }
-function mark(ok,e){
-  if(e)e.stopPropagation();
-  const key=cards[idx][0];
-  if(ok) knownSet.add(key); else knownSet.delete(key);
-  save();
-  if(ok && knownSet.size<cards.length){
-    const start=idx;
-    do { idx=(idx+1)%cards.length; }
-    while(knownSet.has(cards[idx][0]) && idx!==start);
+
+function render() {
+  const remaining = getRemainingCards();
+  const knownCount = knownSet.size;
+  const totalCount = cards.length;
+
+  // 통계 수치 업데이트
+  document.getElementById("known").textContent = knownCount;
+  document.getElementById("remain").textContent = totalCount - knownCount;
+  document.getElementById("bar").style.width = (knownCount / totalCount * 100) + "%";
+
+  const cardWrap = document.getElementById("cardWrap");
+  const completionBox = document.getElementById("completionBox");
+  const controls = document.getElementById("controls");
+
+  if (remaining.length === 0) {
+    // 모든 카드 암기 완료시
+    document.getElementById("pos").textContent = "30 / 30";
+    cardWrap.style.display = "none";
+    controls.style.display = "none";
+    completionBox.style.display = "block";
+    return;
   }
+
+  // 학습할 카드가 남아있는 경우
+  cardWrap.style.display = "block";
+  controls.style.display = "flex";
+  completionBox.style.display = "none";
+
+  // 인덱스 범위 안전 보장
+  if (currentIndex >= remaining.length) {
+    currentIndex = 0;
+  }
+
+  const currentData = remaining[currentIndex];
+  document.getElementById("hanja").textContent = currentData[0];
+  document.getElementById("backReading").textContent = currentData[1];
+  document.getElementById("meaning").textContent = currentData[2];
+  document.getElementById("example").textContent = "예시: " + currentData[3];
+  
+  document.getElementById("pos").textContent = (currentIndex + 1) + " / " + remaining.length;
+  document.getElementById("card").classList.remove("flipped");
+
+  // 전체보기 목록이 켜져있다면 업데이트
+  const listEl = document.getElementById("list");
+  if (listEl.style.display === "block") {
+    renderList();
+  }
+}
+
+function flip() {
+  document.getElementById("card").classList.toggle("flipped");
+}
+
+function next(e) {
+  if (e) e.stopPropagation();
+  const remaining = getRemainingCards();
+  if (remaining.length === 0) return;
+  currentIndex = (currentIndex + 1) % remaining.length;
   render();
 }
-function shuffleCards(){
-  for(let i=cards.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]]}
-  idx=0;render();
+
+function prev(e) {
+  if (e) e.stopPropagation();
+  const remaining = getRemainingCards();
+  if (remaining.length === 0) return;
+  currentIndex = (currentIndex - 1 + remaining.length) % remaining.length;
+  render();
 }
-function resetKnown(){
+
+function mark(ok, e) {
+  if (e) e.stopPropagation();
+  const remaining = getRemainingCards();
+  if (remaining.length === 0) return;
+
+  const currentHanja = remaining[currentIndex][0];
+
+  if (ok) {
+    // 암기 완료 처리 -> 목록에서 완전히 제거됨
+    knownSet.add(currentHanja);
+    save();
+    // 암기 시 현재 위치 유지(단어가 제거되었으므로 다음 단어가 이 인덱스로 올라옴)
+  } else {
+    // 나중에 다시 보기 -> 다음 카드로 이동
+    currentIndex = (currentIndex + 1) % remaining.length;
+  }
+
+  render();
+}
+
+function shuffleCards() {
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  currentIndex = 0;
+  render();
+  if (document.getElementById("mode").value === "quiz") {
+    makeQuiz();
+  }
+}
+
+function resetKnown() {
   knownSet.clear();
   save();
-  idx=0;
+  currentIndex = 0;
   render();
-}
-function toggleList(){
-  const el=document.getElementById("list");
-  el.style.display=el.style.display==="block"?"none":"block";
-  if(el.style.display==="block"){
-    el.innerHTML="<h2>전체 30개</h2>"+cards.map((x,i)=>`<div class="item"><div class="left">${x[0]}<br><small>${x[1]}</small></div><div class="right">${x[2]}</div></div>`).join("");
+  if (document.getElementById("mode").value === "quiz") {
+    makeQuiz();
   }
 }
-function changeMode(){
-  const m=document.getElementById("mode").value;
-  document.getElementById("flash").style.display=m==="flash"?"block":"none";
-  document.getElementById("quiz").style.display=m==="quiz"?"block":"none";
-  if(m==="quiz") makeQuiz();
-}
-function makeQuiz(){
-  quizIndex=Math.floor(Math.random()*cards.length);
-  const x=cards[quizIndex];
-  document.getElementById("quizQ").textContent=x[0]+"  ("+x[1]+")";
-  let opts=[x[2]];
-  while(opts.length<4){let y=cards[Math.floor(Math.random()*cards.length)][2];if(!opts.includes(y))opts.push(y)}
-  opts.sort(()=>Math.random()-.5);
-  document.getElementById("answers").innerHTML=opts.map(o=>`<button onclick="answer(this,${JSON.stringify(o)}==${JSON.stringify(x[2])})">${o}</button>`).join("");
-}
-function answer(btn,correct){
-  document.querySelectorAll("#answers button").forEach(b=>b.disabled=true);
-  btn.classList.add(correct?"correct":"wrong");
-}
-function nextQuiz(){makeQuiz()}
 
+function toggleList() {
+  const el = document.getElementById("list");
+  if (el.style.display === "block") {
+    el.style.display = "none";
+  } else {
+    el.style.display = "block";
+    renderList();
+  }
+}
+
+function renderList() {
+  const el = document.getElementById("list");
+  el.innerHTML = `
+    <div class="list-header">
+      <h2>전체 30개 성어 목록</h2>
+      <span style="font-size:13px;color:#64748b;">암기완료 ${knownSet.size}개 / 미암기 ${cards.length - knownSet.size}개</span>
+    </div>
+  ` + cards.map(x => {
+    const isDone = knownSet.has(x[0]);
+    return `
+      <div class="item">
+        <div class="left">
+          ${x[0]}
+          ${isDone ? '<span class="badge done">암기완료</span>' : '<span class="badge todo">학습중</span>'}
+          <small>${x[1]}</small>
+        </div>
+        <div class="right">${x[2]}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+function changeMode() {
+  const m = document.getElementById("mode").value;
+  document.getElementById("flash").style.display = m === "flash" ? "block" : "none";
+  document.getElementById("quiz").style.display = m === "quiz" ? "block" : "none";
+  if (m === "quiz") {
+    makeQuiz();
+  }
+}
+
+function makeQuiz() {
+  const remaining = getRemainingCards();
+  const quizContent = document.getElementById("quizContent");
+  const quizCompletionBox = document.getElementById("quizCompletionBox");
+
+  if (remaining.length === 0) {
+    quizContent.style.display = "none";
+    quizCompletionBox.style.display = "block";
+    return;
+  }
+
+  quizContent.style.display = "block";
+  quizCompletionBox.style.display = "none";
+
+  // 남은 성어 중 랜덤선택
+  const quizItem = remaining[Math.floor(Math.random() * remaining.length)];
+  document.getElementById("quizQ").textContent = quizItem[0] + " (" + quizItem[1] + ")";
+
+  // 보기 구성 (정답 1개 + 전체 데이터 중 오답 3개)
+  let opts = [quizItem[2]];
+  while (opts.length < 4) {
+    let randMeaning = data[Math.floor(Math.random() * data.length)][2];
+    if (!opts.includes(randMeaning)) {
+      opts.push(randMeaning);
+    }
+  }
+  opts.sort(() => Math.random() - 0.5);
+
+  const answersContainer = document.getElementById("answers");
+  answersContainer.innerHTML = opts.map(o => `
+    <button onclick="answer(this, ${JSON.stringify(o)} === ${JSON.stringify(quizItem[2])})">${o}</button>
+  `).join("");
+}
+
+function answer(btn, isCorrect) {
+  document.querySelectorAll("#answers button").forEach(b => b.disabled = true);
+  if (isCorrect) {
+    btn.classList.add("correct");
+  } else {
+    btn.classList.add("wrong");
+  }
+}
+
+function nextQuiz() {
+  makeQuiz();
+}
+
+// 최초 실행
 render();
 </script>
 </body>

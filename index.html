@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>성어 암기 카드 30</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;background:#f5f7fb;color:#172033}
+  .app{max-width:900px;margin:auto;padding:20px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+  h1{margin:0;font-size:24px}
+  .sub{color:#687386;font-size:13px;margin-top:5px}
+  button{border:0;border-radius:12px;padding:10px 14px;background:#172033;color:white;font-size:14px;cursor:pointer}
+  button.secondary{background:white;color:#172033;border:1px solid #dce1ea}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+  .stat{background:white;border:1px solid #e5e9f0;border-radius:14px;padding:12px;text-align:center}
+  .stat b{display:block;font-size:20px}.stat span{font-size:12px;color:#7b8493}
+  .progress{height:8px;background:#e6eaf1;border-radius:99px;overflow:hidden;margin:10px 0 20px}
+  .bar{height:100%;width:0%;background:#172033;transition:.25s}
+  .card-wrap{perspective:1200px;height:410px;cursor:pointer}
+  .card{height:100%;position:relative;transform-style:preserve-3d;transition:.5s}
+  .card.flipped{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;backface-visibility:hidden;background:white;border:1px solid #e2e7ef;border-radius:24px;box-shadow:0 10px 35px rgba(28,42,66,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center}
+  .back{transform:rotateY(180deg)}
+  .hanja{font-family:"Noto Serif CJK KR","Noto Serif KR","Source Han Serif K","Apple SD Gothic Neo",serif;font-size:62px;letter-spacing:5px}
+  .reading{font-size:23px;font-weight:700;margin-top:12px}
+  .meaning{font-size:20px;line-height:1.55;font-weight:600}
+  .example{font-size:16px;line-height:1.65;color:#586274;margin-top:14px;max-width:650px}
+  .hint{font-size:12px;color:#8b94a3;margin-top:20px}
+  .controls{display:flex;justify-content:center;gap:10px;margin:16px 0}
+  .controls button{min-width:92px}
+  .know{background:#23864a}.again{background:#c44747}
+  .tools{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
+  select{padding:10px;border:1px solid #dce1ea;border-radius:12px;background:white}
+  .quiz{display:none;background:white;border:1px solid #e2e7ef;border-radius:20px;padding:24px}
+  .quiz h2{margin-top:0}
+  .q{font-size:34px;font-weight:700;text-align:center;margin:20px 0}
+  .answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .answers button{background:white;color:#172033;border:1px solid #dce1ea;text-align:left}
+  .answers button.correct{border-color:#23864a;background:#eefaf2}
+  .answers button.wrong{border-color:#c44747;background:#fff1f1}
+  .list{display:none;background:white;border:1px solid #e2e7ef;border-radius:20px;padding:18px}
+  .item{display:flex;justify-content:space-between;gap:12px;padding:12px 4px;border-bottom:1px solid #edf0f4}
+  .item:last-child{border-bottom:0}
+  .item .left{font-size:23px;font-weight:700}.item .right{text-align:right;color:#5e6878}
+  @media(max-width:600px){
+    .app{padding:14px}.hanja{font-size:48px}.card-wrap{height:390px}
+    .answers{grid-template-columns:1fr}.item{align-items:center}.item .right{font-size:13px}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div><h1>📚 성어 암기 카드</h1><div class="sub">수행평가 대비 · 총 30개</div></div>
+  <button class="secondary" onclick="toggleList()">전체 보기</button>
+</header>
+
+<div class="stats">
+  <div class="stat"><b id="pos">1 / 30</b><span>현재 카드</span></div>
+  <div class="stat"><b id="known">0</b><span>외웠어요</span></div>
+  <div class="stat"><b id="remain">30</b><span>남은 카드</span></div>
+</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+
+<div class="tools">
+  <select id="mode" onchange="changeMode()">
+    <option value="flash">암기 카드</option>
+    <option value="quiz">4지선다 퀴즈</option>
+  </select>
+  <button class="secondary" onclick="shuffleCards()">🔀 셔플</button>
+  <button class="secondary" onclick="resetKnown()">학습 기록 초기화</button>
+</div>
+
+<section id="flash">
+  <div class="card-wrap" onclick="flip()">
+    <div class="card" id="card">
+      <div class="face front">
+        <div class="hanja" id="hanja">螢雪之功</div>
+        <div class="reading" id="reading" style="display:none"></div>
+        <div class="hint">카드를 눌러 뜻 보기</div>
+      </div>
+      <div class="face back">
+        <div class="reading" id="backReading">형설지공</div>
+        <div class="meaning" id="meaning">어려운 환경 속에서도 꾸준히 노력하여 얻은 성공과 보람</div>
+        <div class="example" id="example">예시: 어려운 환경에서도 포기하지 않고 공부를 계속했다.</div>
+        <div class="hint">다시 누르면 한자로 돌아갑니다</div>
+      </div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="secondary" onclick="prev(event)">← 이전</button>
+    <button class="again" onclick="mark(false,event)">↻ 다시</button>
+    <button class="know" onclick="mark(true,event)">✓ 암기</button>
+    <button class="secondary" onclick="next(event)">다음 →</button>
+  </div>
+</section>
+
+<section class="quiz" id="quiz">
+  <h2>뜻 맞히기</h2>
+  <div class="q" id="quizQ"></div>
+  <div class="answers" id="answers"></div>
+  <div style="text-align:center;margin-top:18px"><button class="secondary" onclick="nextQuiz()">다음 문제</button></div>
+</section>
+
+<section class="list" id="list"></section>
+</div>
+
+<script>
+const data = [
+["螢雪之功","형설지공","어려운 환경 속에서도 꾸준히 노력하여 얻은 성공과 보람","어려운 환경에서도 포기하지 않고 공부를 계속했다."],
+["一口二言","일구이언","한 입으로 두 말을 함","한 가지 일에 대하여 서로 다른 말을 하면 신뢰를 잃는다."],
+["有口無言","유구무언","입이 있어도 할 말이 없음","잘못을 인정하고 나니 유구무언이었다."],
+["風樹之歎","풍수지탄","효도하려 할 때 부모가 이미 돌아가신 슬픔","부모님께 더 잘해 드리지 못한 마음에 풍수지탄의 슬픔을 느꼈다."],
+["衆口難防","중구난방","여러 사람의 입은 막기 어려움","여러 사람이 동시에 말하니 중구난방으로 이야기가 이어졌다."],
+["進退兩難","진퇴양난","나아가지도 물러서지도 못하는 어려운 처지","어느 쪽을 선택해도 문제가 생겨 진퇴양난에 빠졌다."],
+["橫說竪說","횡설수설","두서없이 아무렇게나 말함","긴장해서 발표에서 횡설수설하고 말았다."],
+["刻舟求劍","각주구검","어리석고 융통성이 없음","상황이 바뀌었는데도 옛 방법만 고집하는 것은 각주구검과 같다."],
+["過猶不及","과유불급","지나친 것은 모자란 것과 같음","공부도 지나치게 하면 과유불급이 될 수 있다."],
+["九死一生","구사일생","여러 번 죽을 고비를 넘기고 겨우 살아남","큰 사고에서 구사일생으로 살아났다."],
+["百折不屈","백절불굴","어떤 어려움이 닥쳐도 절대로 굽히지 않음","그는 실패해도 다시 도전하는 백절불굴의 태도를 보였다."],
+["易地思之","역지사지","처지를 바꾸어 상대방의 입장에서 생각함","친구의 입장에서 생각해 보는 역지사지가 필요하다."],
+["走馬燈","주마등","달리는 말에 걸린 등처럼 무엇인가가 빨리 지나가는 모습","지난 추억들이 주마등처럼 떠올랐다."],
+["雲集","운집","구름처럼 많은 사람이 모여듦","공연장에 사람들이 운집했다."],
+["事必歸正","사필귀정","모든 일은 반드시 바른길로 돌아감","당장은 불공평해 보여도 사필귀정이라고 믿었다."],
+["茶飯事","다반사","차를 마시고 밥을 먹는 일처럼 흔한 일","학교에서 실수하는 것은 누구에게나 다반사다."],
+["咸興差使","함흥차사","심부름 간 사람이 돌아오지 않거나 소식이 없음","친구에게 연락했는데 함흥차사처럼 소식이 없다."],
+["塞翁之馬","새옹지마","인생의 길흉화복은 예측하기 어려움","이번 실패가 오히려 좋은 기회가 될 수도 있으니 새옹지마이다."],
+["朝三暮四","조삼모사","눈앞의 차이만 생각하여 본질을 알지 못함","조건의 이름만 바꾼 것은 조삼모사에 불과하다."],
+["似而非","사이비","겉으로는 비슷하지만 실제로는 전혀 다름","겉모습만 비슷한 사이비 지식에 속지 말아야 한다."],
+["刻骨痛恨","각골통한","뼈에 사무칠 만큼 마음속 깊이 맺힌 한","그때의 실수는 평생 각골통한으로 남았다."],
+["大器晚成","대기만성","큰 그릇은 늦게 이루어짐","처음에는 느렸지만 꾸준히 노력해 대기만성의 결과를 보였다."],
+["轉禍爲福","전화위복","재앙이 바뀌어 오히려 복이 됨","실패를 계기로 새로운 방법을 찾아 전화위복이 되었다."],
+["三人成虎","삼인성호","근거 없는 말이라도 여러 사람이 말하면 믿게 됨","소문도 여러 사람이 반복하면 삼인성호처럼 사실로 받아들여질 수 있다."],
+["知音","지음","마음을 알아주는 친한 벗","힘들 때 내 마음을 알아주는 지음이 되어 준 친구가 고마웠다."],
+["拔本塞源","발본색원","뿌리를 뽑고 근원을 막음","문제를 해결하려면 원인을 찾아 발본색원해야 한다."],
+["畫蛇添足","화사첨족","쓸데없는 일을 하여 도리어 일을 그르침","이미 완성된 그림에 더 손대는 것은 화사첨족이다."],
+["唇亡齒寒","순망치한","한쪽이 망하면 다른 쪽도 영향을 받아 위태로움","두 나라는 서로 의지하는 관계라 순망치한의 관계라고 할 수 있다."],
+["指鹿爲馬","지록위마","사슴을 가리켜 말이라고 하며 윗사람을 농락함","명백한 사실을 억지로 바꾸어 말하는 것은 지록위마와 같다."],
+["愚公移山","우공이산","어떤 일이든 끊임없이 노력하면 반드시 이루어짐","매일 조금씩 공부하면 결국 목표를 이룰 수 있다는 것이 우공이산의 교훈이다."]
+];
+
+let cards=[...data], idx=0, knownSet=new Set(), quizIndex=0;
+
+function render(){
+  const x=cards[idx];
+  document.getElementById("hanja").textContent=x[0];
+  document.getElementById("reading").textContent=x[1];
+  document.getElementById("reading").style.display="none";
+  document.getElementById("backReading").textContent=x[1];
+  document.getElementById("meaning").textContent=x[2];
+  document.getElementById("example").textContent="예시: "+x[3];
+  document.getElementById("pos").textContent=(idx+1)+" / "+cards.length;
+  document.getElementById("known").textContent=knownSet.size;
+  document.getElementById("remain").textContent=cards.length-knownSet.size;
+  document.getElementById("bar").style.width=(knownSet.size/cards.length*100)+"%";
+  document.getElementById("card").classList.remove("flipped");
+}
+function flip(){document.getElementById("card").classList.toggle("flipped")}
+function next(e){if(e)e.stopPropagation();idx=(idx+1)%cards.length;render()}
+function prev(e){if(e)e.stopPropagation();idx=(idx-1+cards.length)%cards.length;render()}
+function mark(ok,e){
+  if(e)e.stopPropagation();
+  const key=cards[idx][0];
+  if(ok) knownSet.add(key); else knownSet.delete(key);
+  render();
+  if(ok) setTimeout(()=>next(),180);
+}
+function shuffleCards(){
+  for(let i=cards.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]]}
+  idx=0;render();
+}
+function resetKnown(){knownSet.clear();idx=0;render()}
+function toggleList(){
+  const el=document.getElementById("list");
+  el.style.display=el.style.display==="block"?"none":"block";
+  if(el.style.display==="block"){
+    el.innerHTML="<h2>전체 30개</h2>"+cards.map((x,i)=>`<div class="item"><div class="left">${x[0]}<br><small>${x[1]}</small></div><div class="right">${x[2]}</div></div>`).join("");
+  }
+}
+function changeMode(){
+  const m=document.getElementById("mode").value;
+  document.getElementById("flash").style.display=m==="flash"?"block":"none";
+  document.getElementById("quiz").style.display=m==="quiz"?"block":"none";
+  if(m==="quiz") makeQuiz();
+}
+function makeQuiz(){
+  quizIndex=Math.floor(Math.random()*cards.length);
+  const x=cards[quizIndex];
+  document.getElementById("quizQ").textContent=x[0]+"  ("+x[1]+")";
+  let opts=[x[2]];
+  while(opts.length<4){let y=cards[Math.floor(Math.random()*cards.length)][2];if(!opts.includes(y))opts.push(y)}
+  opts.sort(()=>Math.random()-.5);
+  document.getElementById("answers").innerHTML=opts.map(o=>`<button onclick="answer(this,${JSON.stringify(o)}==${JSON.stringify(x[2])})">${o}</button>`).join("");
+}
+function answer(btn,correct){
+  document.querySelectorAll("#answers button").forEach(b=>b.disabled=true);
+  btn.classList.add(correct?"correct":"wrong");
+}
+function nextQuiz(){makeQuiz()}
+
+render();
+</script>
+</body>
+</html>
